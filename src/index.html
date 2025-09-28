@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hero — День 1</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="logo" href="#">Brand</a>
+      <a class="cta-link" href="#contact">Связаться</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero__content">
+        <h1>Запусти сайт за 3 дня</h1>
+        <p>Адаптивный лендинг, формы заявок и базовая аналитика — быстро и без боли.</p>
+        <form class="hero__form" id="lead-form">
+          <input type="email" name="email" placeholder="Ваш e-mail" required />
+          <button type="submit">Получить предложение</button>
+          <small class="form-hint">Мы не шлём спам. Отписка в 1 клик.</small>
+        </form>
+      </div>
+      <div class="hero__art" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>© <span id="year"></span> Brand</small>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const form = document.getElementById('lead-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = new FormData(form).get('email');
+      if (!/^\S+@\S+\.\S+$/.test(email)) { alert('Введите корректный e-mail'); return; }
+      alert('Заявка отправлена (мок). Завтра подключим настоящую отправку в Telegram/почту.');
+      form.reset();
+    });
+  </script>
+</body>
+</html>
