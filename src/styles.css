@@ -35,3 +35,10 @@ img{max-width:100%;display:block}
 .footer__inner{display:flex;justify-content:center;color:var(--muted)}
 
 @media (max-width:900px){.hero{grid-template-columns:1fr}.hero__art{order:-1}}
+
+.benefits{padding:2rem 0 3rem}
+.benefits__grid{list-style:none;margin:0;padding:0;display:grid;gap:1rem;
+  grid-template-columns:repeat(3,minmax(0,1fr))}
+.benefits h3{margin:.25rem 0}
+.benefits p{margin:0;color:var(--muted)}
+@media (max-width:900px){.benefits__grid{grid-template-columns:1fr}}

@@ -19,15 +19,23 @@
       <div class="hero__content">
         <h1>Запусти сайт за 3 дня</h1>
         <p>Адаптивный лендинг, формы заявок и базовая аналитика — быстро и без боли.</p>
-        <form class="hero__form" id="lead-form">
-          <input type="email" name="email" placeholder="Ваш e-mail" required />
-          <button type="submit">Получить предложение</button>
-          <small class="form-hint">Мы не шлём спам. Отписка в 1 клик.</small>
-        </form>
+        <form class="hero__form" action="https://formspree.io/f/xblzgegl" method="POST">
+  <input type="email" name="email" placeholder="Ваш e-mail" required />
+  <button type="submit">Получить предложение</button>
+  <input type="hidden" name="_subject" value="Заявка с лендинга" />
+</form>
       </div>
       <div class="hero__art" aria-hidden="true"></div>
     </section>
   </main>
+
+  <section class="benefits container">
+  <ul class="benefits__grid">
+    <li><h3>Быстро</h3><p>Лендинг за 3 дня — от идеи до заявок.</p></li>
+    <li><h3>Практично</h3><p>Форма, аналитика, адаптив — всё базово есть.</p></li>
+    <li><h3>Прозрачно</h3><p>Фикс-прайс, чек-лист сдачи, отчёт.</p></li>
+  </ul>
+</section>
 
   <footer class="site-footer">
     <div class="container footer__inner">
