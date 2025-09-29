@@ -3,10 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hero — День 1</title>
+  <title>Hero — День 2</title>
+  <meta name="description" content="Адаптивный лендинг, формы заявок и базовая аналитика — быстро и без боли." />
   <link rel="stylesheet" href="./styles.css" />
+  <!-- (необязательно) если сделал favicon.svg, раскомментируй: -->
+  <!-- <link rel="icon" type="image/svg+xml" href="./favicon.svg" /> -->
 </head>
 <body>
+  <!-- Шапка -->
   <header class="site-header">
     <nav class="container nav">
       <a class="logo" href="#">Brand</a>
@@ -15,43 +19,100 @@
   </header>
 
   <main>
+    <!-- HERO -->
     <section class="hero container">
       <div class="hero__content">
         <h1>Запусти сайт за 3 дня</h1>
         <p>Адаптивный лендинг, формы заявок и базовая аналитика — быстро и без боли.</p>
-        <form class="hero__form" action="https://formspree.io/f/xblzgegl" method="POST">
-  <input type="email" name="email" placeholder="Ваш e-mail" required />
-  <button type="submit">Получить предложение</button>
-  <input type="hidden" name="_subject" value="Заявка с лендинга" />
-</form>
+
+        <!-- ФОРМА (Formspree) -->
+        <!-- ЗАМЕНИ YOUR_FORMSPREE_ID на свой, формат: https://formspree.io/f/xxxxabcd -->
+        <form class="hero__form" id="lead-form" action="https://formspree.io/f/xblzgegl" method="POST" novalidate>
+          <input type="email" name="email" placeholder="Ваш e-mail" required inputmode="email" autocomplete="email" />
+          <button type="submit" id="submit-btn">Получить предложение</button>
+
+          <!-- Доп. поля -->
+          <input type="hidden" name="_subject" value="Заявка с лендинга" />
+          <!-- Honeypot (скрытое поле для отсечки ботов) -->
+          <input type="text" name="company" id="hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" />
+
+          <small class="form-hint">Мы не шлём спам. Отписка в 1 клик.</small>
+        </form>
+
+        <!-- Сообщение об успехе -->
+        <p id="form-ok" style="display:none;margin-top:.5rem;">🎯 Заявка отправлена! Проверьте почту.</p>
+        <noscript><p>Для отправки формы включите JavaScript.</p></noscript>
       </div>
+
+      <!-- Декоративный арт -->
       <div class="hero__art" aria-hidden="true"></div>
+    </section>
+
+    <!-- (опционально) Блок преимуществ -->
+    <section class="benefits container">
+      <ul class="benefits__grid">
+        <li><h3>Быстро</h3><p>Лендинг за 3 дня — от идеи до заявок.</p></li>
+        <li><h3>Практично</h3><p>Форма, аналитика, адаптив — всё базово есть.</p></li>
+        <li><h3>Прозрачно</h3><p>Фикс-прайс, чек-лист сдачи, отчёт.</p></li>
+      </ul>
     </section>
   </main>
 
-  <section class="benefits container">
-  <ul class="benefits__grid">
-    <li><h3>Быстро</h3><p>Лендинг за 3 дня — от идеи до заявок.</p></li>
-    <li><h3>Практично</h3><p>Форма, аналитика, адаптив — всё базово есть.</p></li>
-    <li><h3>Прозрачно</h3><p>Фикс-прайс, чек-лист сдачи, отчёт.</p></li>
-  </ul>
-</section>
-
+  <!-- Подвал -->
   <footer class="site-footer">
     <div class="container footer__inner">
       <small>© <span id="year"></span> Brand</small>
     </div>
   </footer>
 
+  <!-- ЛОГИКА ФОРМЫ -->
   <script>
+    // текущий год в футере
     document.getElementById('year').textContent = new Date().getFullYear();
+
     const form = document.getElementById('lead-form');
-    form.addEventListener('submit', (e) => {
+    const okEl = document.getElementById('form-ok');
+    const btn = document.getElementById('submit-btn');
+    const hp = document.getElementById('hp');
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = new FormData(form).get('email');
-      if (!/^\S+@\S+\.\S+$/.test(email)) { alert('Введите корректный e-mail'); return; }
-      alert('Заявка отправлена (мок). Завтра подключим настоящую отправку в Telegram/почту.');
-      form.reset();
+
+      // honeypot: если бот заполнил скрытое поле — ничего не отправляем
+      if (hp.value) return;
+
+      // простая валидация email
+      const fd = new FormData(form);
+      const email = fd.get('email');
+      if (!/^\S+@\S+\.\S+$/.test(String(email))) {
+        alert('Введите корректный e-mail');
+        return;
+      }
+
+      // UX: блокируем кнопку на время запроса
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Отправляем…';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: fd,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          okEl.style.display = 'block';
+          form.reset();
+        } else {
+          alert('Ошибка отправки. Попробуйте ещё раз.');
+        }
+      } catch (err) {
+        alert('Сеть недоступна. Проверьте соединение.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
     });
   </script>
 </body>
